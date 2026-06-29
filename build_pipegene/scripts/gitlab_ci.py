@@ -222,6 +222,7 @@ def build_pipeline(params: dict, sensitive_params: list) -> None:
         job.artifacts.add_paths(*env_artifact_paths)
 
         job.artifacts.add_paths(*REPO_ROOT_PATHS, 'tmp/')
+        job.artifacts.add_paths('.git')
 
         if do_checkout(job):
             sparse_paths = get_sparse_checkout_paths(

@@ -28,7 +28,6 @@ def build_commit_message() -> str:
 
 
 def git_commit() -> None:
-    logger.info("===== SCRIPT START =====")
     repo = GitRepoManager()
     repo.configure()
 
@@ -37,12 +36,9 @@ def git_commit() -> None:
     if not repo.stage_changes():
         logger.info("No changes. Skip.")
         return
-
     message = build_commit_message()
     sha = repo.create_detached_commit(message)
     repo.sync_and_push(sha)
-
-    logger.info("===== SCRIPT END =====")
 
 
 if __name__ == '__main__':
