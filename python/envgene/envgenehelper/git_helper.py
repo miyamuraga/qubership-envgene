@@ -154,7 +154,8 @@ class GitRepoManager:
         self.repo.git.sparse_checkout("set", *paths)
         self.repo.git.read_tree("-mu", "HEAD")
 
-    def get_sparse_checkout_paths(self, include_full_cluster: bool = False) -> list[str]:
+    @staticmethod
+    def get_sparse_checkout_paths(include_full_cluster: bool = False) -> list[str]:
         full_env_name = getenv_with_error("FULL_ENV_NAME")
         cluster_name = get_cluster_name_from_full_name(full_env_name)
         env_name = get_environment_name_from_full_name(full_env_name)

@@ -3,6 +3,7 @@ from os import listdir
 
 from envgenehelper import logger, get_cluster_name_from_full_name, get_environment_name_from_full_name
 from envgenehelper.effective_set_helper import resolve_es_generation_mode
+from envgenehelper.git_helper import GitRepoManager
 from envgenehelper.plugin_engine import PluginEngine
 from gcip import JobFilter, Pipeline
 
@@ -216,11 +217,7 @@ def build_pipeline(params: dict, sensitive_params: list) -> None:
         job.artifacts.add_paths('.git')
 
         if pipeline_helper.do_checkout(job):
-            sparse_paths = pipeline_helper.get_sparse_checkout_paths(
-                job_cluster_name,
-                job_env_name,
-                include_full_cluster=cred_rotation_active,
-            )
+            sparse_paths = GitRepoManager.get_sparse_checkout_paths(include_full_cluster=cred_rotation_active)
             job.set_sparse_checkout(sparse_paths)
         else:
             job.add_variables(GIT_STRATEGY="empty")
