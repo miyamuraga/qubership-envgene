@@ -92,7 +92,6 @@ def change_test_dir(request, monkeypatch):
 def test_build_pipeline(pipeline_vars, expected_sequence):
     ci_commit_ref_name = "feature/test-generate"
     os.environ["CI_COMMIT_REF_NAME"] = ci_commit_ref_name
-    os.environ["FULL_ENV_NAME"] = PipelineVars.env_names
     pipeline_vars = asdict(pipeline_vars, dict_factory=convert_keys_to_uppercase)
     os.environ.update(pipeline_vars)
 
@@ -116,7 +115,6 @@ def _find_job_by_stage(config: dict, stage: str) -> dict:
 def test_downstream_job_uses_empty_git_strategy():
     ci_commit_ref_name = "feature/test-generate"
     os.environ["CI_COMMIT_REF_NAME"] = ci_commit_ref_name
-    os.environ["FULL_ENV_NAME"] = PipelineVars.env_names
     pipeline_vars = asdict(PipelineVars(get_passport="false"), dict_factory=convert_keys_to_uppercase)
     os.environ.update(pipeline_vars)
 
@@ -127,3 +125,20 @@ def test_downstream_job_uses_empty_git_strategy():
 
     assert downstream_job["variables"]["GIT_STRATEGY"] == "empty"
     assert "hooks" not in downstream_job
+
+
+def test_first_job_sparse_checkout_uses_job_environment_name(monkeypatch):
+    ci_commit_ref_name = "feature/test-generate"
+    os.environ["CI_COMMIT_REF_NAME"] = ci_commit_ref_name
+    monkeypatch.delenv("FULL_ENV_NAME", raising=False)
+    pipeline_vars = asdict(PipelineVars(get_passport="false"), dict_factory=convert_keys_to_uppercase)
+    os.environ.update(pipeline_vars)
+
+    perform_generation()
+
+    result = openYaml("generated-config.yml")
+    first_job = _find_job_by_stage(result, "app_reg_def_render")
+    script = "\n".join(first_job["script"])
+
+    assert "sparse_checkout.py" in script
+    assert "environments/cluster-01/env-01" in script
