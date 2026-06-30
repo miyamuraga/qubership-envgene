@@ -217,7 +217,10 @@ def build_pipeline(params: dict, sensitive_params: list) -> None:
         job.artifacts.add_paths('.git')
 
         if pipeline_helper.do_checkout(job):
-            sparse_paths = GitRepoManager.get_sparse_checkout_paths(include_full_cluster=cred_rotation_active)
+            sparse_paths = GitRepoManager.get_sparse_checkout_paths(
+                job_full_name,
+                include_full_cluster=cred_rotation_active,
+            )
             job.set_sparse_checkout(sparse_paths)
         else:
             job.add_variables(GIT_STRATEGY="empty")

@@ -126,7 +126,7 @@ class GitRepoManager:
         self._fetch(ref=self.ctx.ref_name, checkout="FETCH_HEAD", checkout_option="--detach")
         try:
             self.repo.git.cherry_pick(snapshot_sha)
-            self.repo.git.sync_and_push("origin", f"HEAD:{self.ctx.ref_name}")
+            self.repo.git.push("origin", f"HEAD:{self.ctx.ref_name}")
 
         except Exception as e:
             self.repo.git.cherry_pick("--abort", with_exceptions=False)
@@ -145,8 +145,9 @@ class GitRepoManager:
 
         retry_call(retry_policy, run, retry_on=(RuntimeError,))
 
-    def sparse_checkout(self, ) -> None:
-        paths = self.get_sparse_checkout_paths()
+    def sparse_checkout(self, paths: list[str] | None = None) -> None:
+        if paths is None:
+            paths = self.get_sparse_checkout_paths()
         self._fetch(ref=self.ctx.commit_sha, checkout=self.ctx.commit_sha, checkout_option='--force',
                     create_remote=True)
 
@@ -155,8 +156,12 @@ class GitRepoManager:
         self.repo.git.read_tree("-mu", "HEAD")
 
     @staticmethod
-    def get_sparse_checkout_paths(include_full_cluster: bool = False) -> list[str]:
-        full_env_name = getenv_with_error("FULL_ENV_NAME")
+    def get_sparse_checkout_paths(
+            full_env_name: str | None = None,
+            include_full_cluster: bool = False,
+    ) -> list[str]:
+        if full_env_name is None:
+            full_env_name = getenv_with_error("FULL_ENV_NAME")
         cluster_name = get_cluster_name_from_full_name(full_env_name)
         env_name = get_environment_name_from_full_name(full_env_name)
         paths = list(REPO_ROOT_PATHS)

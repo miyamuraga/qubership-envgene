@@ -92,7 +92,6 @@ def change_test_dir(request, monkeypatch):
 def test_build_pipeline(pipeline_vars, expected_sequence):
     ci_commit_ref_name = "feature/test-generate"
     os.environ["CI_COMMIT_REF_NAME"] = ci_commit_ref_name
-    os.environ["FULL_ENV_NAME"] = PipelineVars.env_names
     pipeline_vars = asdict(pipeline_vars, dict_factory=convert_keys_to_uppercase)
     os.environ.update(pipeline_vars)
 
@@ -116,7 +115,6 @@ def _find_job_by_stage(config: dict, stage: str) -> dict:
 def test_downstream_job_uses_empty_git_strategy():
     ci_commit_ref_name = "feature/test-generate"
     os.environ["CI_COMMIT_REF_NAME"] = ci_commit_ref_name
-    os.environ["FULL_ENV_NAME"] = PipelineVars.env_names
     pipeline_vars = asdict(PipelineVars(get_passport="false"), dict_factory=convert_keys_to_uppercase)
     os.environ.update(pipeline_vars)
 
