@@ -1,6 +1,6 @@
 from gcip import WhenStatement
 from envgenehelper import logger
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 def prepare_bg_manage_job(pipeline, full_env):
     logger.info(f'prepare_bg manage job for {full_env}')

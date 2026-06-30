@@ -1,7 +1,7 @@
 from gcip import TriggerJob, TriggerStrategy, WhenStatement
 from envgenehelper import logger, openYaml
 from integration_loader.loader import IntergrationConfigLoader
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 from os import getenv
 
 

@@ -1,6 +1,6 @@
 from gcip import WhenStatement
 from envgenehelper import logger
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 def prepare_credential_rotation_job(pipeline, full_env, environment_name, cluster_name):
   logger.info(f'Prepare credential_rotation_job job for {full_env}.')

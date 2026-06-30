@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
 
-from envgenehelper import logger
+from envgenehelper import logger, get_environment_name_from_full_name, get_cluster_name_from_full_name, \
+    getenv_with_error
 from envgenehelper.http_helper import ApiClient
 from envgenehelper.retry import GIT_RETRY_POLICY, retry_call, RetryPolicy
 from git import GitCommandError, Repo
 from pydantic import BaseModel
+from envgenehelper.pipeline_helper import REPO_ROOT_PATHS, get_env_artifact_paths
 
 
 class GitContext(BaseModel):
@@ -96,8 +98,8 @@ class GitRepoManager:
 
     def stage_changes(self) -> bool:
         logger.info("Staging changes")
-
-        self.repo.git.add(A=True)
+        paths = self.get_sparse_checkout_paths()
+        self.repo.git.add("--all", "--", *paths)
 
         staged_files = self.repo.git.diff("--cached", "--name-only")
         for file in staged_files.splitlines():
@@ -143,13 +145,24 @@ class GitRepoManager:
 
         retry_call(retry_policy, run, retry_on=(RuntimeError,))
 
-    def sparse_checkout(self, paths: list[str]) -> None:
+    def sparse_checkout(self, ) -> None:
+        paths = self.get_sparse_checkout_paths()
         self._fetch(ref=self.ctx.commit_sha, checkout=self.ctx.commit_sha, checkout_option='--force',
                     create_remote=True)
 
         self.repo.git.sparse_checkout("init", "--cone")
         self.repo.git.sparse_checkout("set", *paths)
         self.repo.git.read_tree("-mu", "HEAD")
+
+    def get_sparse_checkout_paths(self, include_full_cluster: bool = False) -> list[str]:
+        full_env_name = getenv_with_error("FULL_ENV_NAME")
+        cluster_name = get_cluster_name_from_full_name(full_env_name)
+        env_name = get_environment_name_from_full_name(full_env_name)
+        paths = list(REPO_ROOT_PATHS)
+        paths.extend(get_env_artifact_paths(cluster_name, env_name))
+        if include_full_cluster:
+            paths.append(f"environments/{cluster_name}/")
+        return paths
 
 
 class GitLabClient:

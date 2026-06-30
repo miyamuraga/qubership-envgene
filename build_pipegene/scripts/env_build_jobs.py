@@ -1,6 +1,6 @@
 from gcip import WhenStatement
 from envgenehelper import logger
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 
 def prepare_env_build_job(pipeline, is_template_test, full_env, enviroment_name, cluster_name, group_id, artifact_id):

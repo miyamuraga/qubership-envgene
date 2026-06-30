@@ -2,14 +2,8 @@ import shlex
 from os import getenv
 from typing import Optional, List, Dict, Union, Any
 
-from envgenehelper import (
-    logger,
-    check_file_exists,
-    openYaml,
-    getAppDefinitionPath,
-    get_envgene_config_yaml,
-    get_or_create_nested_yaml_attribute
-)
+from envgenehelper import check_file_exists, openYaml, logger, get_or_create_nested_yaml_attribute, \
+    get_envgene_config_yaml, getAppDefinitionPath
 from gcip import Job, Need, TriggerJob
 
 REPO_ROOT_PATHS = [
@@ -199,14 +193,3 @@ def get_shared_entity_paths(cluster_name: str) -> list[str]:
 
     return paths
 
-
-def get_sparse_checkout_paths(
-        cluster_name: str,
-        env_name: str,
-        include_full_cluster: bool = False,
-) -> list[str]:
-    paths = list(REPO_ROOT_PATHS)
-    paths.extend(get_env_artifact_paths(cluster_name, env_name))
-    if include_full_cluster:
-        paths.append(f"environments/{cluster_name}/")
-    return paths

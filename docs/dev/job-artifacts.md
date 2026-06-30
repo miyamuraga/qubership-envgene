@@ -17,7 +17,7 @@ Artifact size limit: **1500 MB**
 5. Saves required paths to job artifacts
 
 Sparse checkout paths are computed by `get_sparse_checkout_paths()` in
-[`build_pipegene/scripts/pipeline_helper.py`](/build_pipegene/scripts/pipeline_helper.py). The include list is
+[`build_pipegene/scripts/pipeline_helper.py`](/python/envgene/envgenehelper/pipeline_helper.py). The include list is
 `REPO_ROOT_PATHS` plus the same environment paths used for job artifacts (`get_env_artifact_paths()`).
 When `CRED_ROTATION_PAYLOAD` is set, checkout also includes all of `environments/<cluster-name>/` so credential
 rotation can scan sibling environments in the same cluster.
@@ -52,4 +52,4 @@ These paths are:
 3. Committed to Git by `git_commit_job`
 
 Shared directories under `environments/` that are included in both sparse checkout and artifacts are defined in `get_shared_entity_paths()` in
-[`build_pipegene/scripts/pipeline_helper.py`](/build_pipegene/scripts/pipeline_helper.py).
+[`build_pipegene/scripts/pipeline_helper.py`](/python/envgene/envgenehelper/pipeline_helper.py).

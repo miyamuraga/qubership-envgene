@@ -1,14 +1,12 @@
-from os import getenv
-
 from gcip import WhenStatement
 
 from envgenehelper import logger
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 
 def prepare_process_sd(pipeline, full_env, environment_name, cluster_name):
     logger.info(f'Prepare process_sd job for {full_env}')
-    
+
     script = [
         'python3 /build_env/scripts/build_env/process_sd.py',
     ]
@@ -29,7 +27,7 @@ def prepare_process_sd(pipeline, full_env, environment_name, cluster_name):
     }
 
     process_sd_job = job_instance(params=process_sd_set_params, vars=process_sd_set_vars)
-    process_sd_job.artifacts.when = WhenStatement.ALWAYS    
+    process_sd_job.artifacts.when = WhenStatement.ALWAYS
     pipeline.add_children(process_sd_job)
-    
+
     return process_sd_job

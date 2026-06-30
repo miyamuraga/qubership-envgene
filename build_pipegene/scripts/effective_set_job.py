@@ -7,7 +7,7 @@ from envgenehelper.effective_set_helper import GenerationMode
 from gcip import WhenStatement, Need
 from typing_extensions import deprecated
 
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 
 def prepare_generate_effective_set_job(pipeline, full_env_name, env_name, cluster_name,

@@ -3,7 +3,7 @@ import warnings
 from envgenehelper import logger
 from gcip import WhenStatement
 
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 
 def is_inventory_generation_needed(is_template_test, inventory_params):

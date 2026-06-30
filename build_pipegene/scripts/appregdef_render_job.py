@@ -1,7 +1,7 @@
 from gcip import WhenStatement
 
 from envgenehelper import logger
-from pipeline_helper import job_instance
+from envgenehelper.pipeline_helper import job_instance
 
 
 def prepare_appregdef_render_job(pipeline, params, full_env, environment_name, cluster_name, group_id, artifact_id,
