@@ -166,6 +166,12 @@ def test_get_sparse_checkout_paths_accepts_explicit_environment_name(monkeypatch
     assert "environments/cluster-02/" in paths
 
 
+def test_git_helper_does_not_import_pipeline_helper():
+    git_helper_source = Path("python/envgene/envgenehelper/git_helper.py").read_text(encoding="utf-8")
+
+    assert "envgenehelper.pipeline_helper" not in git_helper_source
+
+
 def test_sync_and_push_cherry_picks_snapshot_without_silently_overwriting_remote_head(tmp_path, monkeypatch):
     remote = tmp_path / "remote.git"
     seed = tmp_path / "seed"

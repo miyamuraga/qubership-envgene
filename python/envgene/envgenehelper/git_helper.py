@@ -4,10 +4,10 @@ from pathlib import Path
 from envgenehelper import logger, get_environment_name_from_full_name, get_cluster_name_from_full_name, \
     getenv_with_error
 from envgenehelper.http_helper import ApiClient
+from envgenehelper.repo_paths import REPO_ROOT_PATHS, get_env_artifact_paths
 from envgenehelper.retry import GIT_RETRY_POLICY, retry_call, RetryPolicy
 from git import GitCommandError, Repo
 from pydantic import BaseModel
-from envgenehelper.pipeline_helper import REPO_ROOT_PATHS, get_env_artifact_paths
 
 
 class GitContext(BaseModel):
